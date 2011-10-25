@@ -3,8 +3,8 @@
 /**
  * Enter description here ...
  *
- * @name Mimex
- * @author Jose' Pedro Saraiva <nocive@gmail.com>
+ * @package	Mimex
+ * @author	Jose' Pedro Saraiva <nocive at gmail.com>
  */
 class Mimex
 {
@@ -14,7 +14,8 @@ class Mimex
          * @var string
          * @access public
          */
-        public static $mimetypesMap = '/etc/mime.types';
+        public static $mimetypesMap = 'mime.types';
+
 
         /**
          * Enter description here ...
@@ -22,8 +23,12 @@ class Mimex
          * @param string $file
          * @return string
          */
-        public static function extension( $file )
-        {
+        public static function extension( $file, $realDetect = true )
+	{
+		if ($realDetect) {
+			// TODO
+			throw new Exception( 'not yet implemented' );
+		}
                 return strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
         } // extension }}}
 
@@ -34,8 +39,12 @@ class Mimex
          * @param string $file
          * @return string
          */
-        public static function mimetype( $file )
-        {
+        public static function mimetype( $file, $realDetect = true )
+	{
+		if ($realDetect) {
+			// TODO
+			throw new Exception( 'not yet implemented' );
+		}
                 return self::extensionToMimetype( self::extension( $file ) );
         } // mimetype }}}
 
