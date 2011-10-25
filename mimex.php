@@ -14,7 +14,7 @@ class Mimex
          * @var string
          * @access public
          */
-        public static $mimetypesMap = 'mime.types';
+	public static $mimetypesMap = 'mime.types';
 
 
         /**
@@ -26,8 +26,7 @@ class Mimex
         public static function extension( $file, $realDetect = true )
 	{
 		if ($realDetect) {
-			// TODO
-			throw new Exception( 'not yet implemented' );
+			return self::mimetypeToExtension( self::mimetype( $file, true ) );
 		}
                 return strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
         } // extension }}}
@@ -42,11 +41,28 @@ class Mimex
         public static function mimetype( $file, $realDetect = true )
 	{
 		if ($realDetect) {
-			// TODO
-			throw new Exception( 'not yet implemented' );
+			return self::detectMimetype( $file );
 		}
                 return self::extensionToMimetype( self::extension( $file ) );
-        } // mimetype }}}
+	} // mimetype }}}
+
+
+	public static function detectMimetype( $file )
+	{
+		static $finfo;
+
+		if (! extension_loaded( 'fileinfo' )) {
+			throw new Exception( 'Can\'t detect mimetype, Fileinfo extension not loaded' );
+		}
+		if (! $finfo) {
+			$finfo = new finfo( FILEINFO_MIME_TYPE );
+		}
+		$mimetype = $finfo->file( $file );
+		if ($mimetype === 'image/x-ico') {
+			$mimetype = 'image/x-icon';
+		}
+		return $mimetype;
+	}
 
 
         /**
