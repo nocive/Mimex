@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Enter description here ...
+ * Simple class to converting extension to mimetypes and vice versa.
+ * It also detects file mimetypes using PHP Fileinfo
  *
  * @package	Mimex
  * @author	Jose' Pedro Saraiva <nocive at gmail.com>
@@ -11,8 +12,8 @@ class Mimex
         /**
          * Enter description here ...
          *
-         * @var string
-         * @access public
+         * @var		string
+         * @access	public
          */
 	public static $mimetypesMap = 'mime.types';
 
@@ -20,8 +21,8 @@ class Mimex
         /**
          * Enter description here ...
          *
-         * @param string $file
-         * @return string
+         * @param	string $file
+         * @return	string
          */
         public static function extension( $file, $realDetect = true )
 	{
@@ -35,8 +36,8 @@ class Mimex
         /**
          * Enter description here ...
          *
-         * @param string $file
-         * @return string
+         * @param	string $file
+         * @return	string
          */
         public static function mimetype( $file, $realDetect = true )
 	{
@@ -47,6 +48,12 @@ class Mimex
 	} // mimetype }}}
 
 
+	/**
+	 * Attempts to detect file mimetype using PHP Fileinfo
+	 *
+	 * @param	string $file
+	 * @return	string
+	 */
 	public static function detectMimetype( $file )
 	{
 		static $finfo;
@@ -68,14 +75,11 @@ class Mimex
         /**
          * Enter description here ...
          *
-         * @param string $file
-         * @return string
+         * @param	string $file
+         * @return	string
          */
         public static function extensionToMimetype( $ext )
         {
-                # Returns the system MIME type (as defined in /etc/mime.types) for the filename specified.
-                #
-                # $file - the filename to examine
                 static $types;
                 if (! isset( $types )) {
                         $types = self::extensionsMimetypes();
@@ -88,19 +92,15 @@ class Mimex
         /**
          * Enter description here ...
          *
-         * @param string $type
-         * @return string
+         * @param	string $type
+         * @return	string
          */
         public static function mimetypeToExtension( $type )
         {
-                # Returns the canonical file extension for the MIME type specified, as defined in /etc/mime.types (considering the first
-                # extension listed to be canonical).
-                #
-                # $type - the MIME type
                 static $exts;
                 if (! isset( $exts )) {
                         $exts = self::mimetypesExtensions();
-                }
+		}
                 $extension = isset( $exts[$type] ) ? $exts[$type] : null;
                 // prefer jpg over jpeg
                 if ($extension === 'jpeg') {
@@ -113,13 +113,13 @@ class Mimex
         /**
          * Enter description here ...
          *
-         * @return array
+         * @return	array
          */
         public static function mimetypesExtensions()
         {
                 $mimeMap = self::_getMapFilename();
-                # Returns the system MIME type mapping of MIME types to extensions, as defined in /etc/mime.types (considering the first
-                # extension listed to be canonical).
+                // Returns the system MIME type mapping of MIME types to extensions, as defined in /etc/mime.types (considering the first
+                // extension listed to be canonical).
                 $out = array();
                 $file = fopen( $mimeMap, 'r' );
                 while ( ($line = fgets( $file )) !== false ) {
@@ -144,12 +144,12 @@ class Mimex
         /**
          * Enter description here ...
          *
-         * @return array
+         * @return	array
          */
         public static function extensionsMimetypes()
         {
                 $mimeMap = self::_getMapFilename();
-                # Returns the system MIME type mapping of extensions to MIME types, as defined in /etc/mime.types.
+                // Returns the system MIME type mapping of extensions to MIME types, as defined in /etc/mime.types.
                 $out = array();
                 $file = fopen( $mimeMap, 'r' );
                 while ( ($line = fgets( $file )) !== false ) {
@@ -174,8 +174,8 @@ class Mimex
         /**
          * Enter description here ...
          *
-         * @return array
-         * @throws Exception
+         * @throws	Exception
+         * @return	array
          */
         protected static function _getMapFilename()
         {
