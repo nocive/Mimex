@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Simple class to converting extension to mimetypes and vice versa.
+ * Mimex
+ * Simple class for converting extension to mimetypes and vice versa.
  * It also detects file mimetypes using PHP Fileinfo
  *
  * @package	Mimex
@@ -27,7 +28,7 @@ class Mimex
         public static function extension( $file, $realDetect = true )
 	{
 		if ($realDetect) {
-			return self::mimetypeToExtension( self::mimetype( $file, true ) );
+			return self::mimetypeToExtension( self::detectMimetype( $file ) );
 		}
                 return strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
         } // extension }}}
