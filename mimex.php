@@ -3,7 +3,8 @@
 /**
  * Mimex
  * Simple class for converting extension to mimetypes and vice versa.
- * It also detects file mimetypes using PHP Fileinfo
+ * It also detects file mimetypes using PHP Fileinfo extension.
+ * This code was inspired by http://goo.gl/KsTLx
  *
  * @package	Mimex
  * @author	Jose' Pedro Saraiva <nocive at gmail.com>
@@ -23,6 +24,7 @@ class Mimex
          * Enter description here ...
          *
          * @param	string $file
+         * @param	bool $realDetect
          * @return	string
          */
         public static function extension( $file, $realDetect = true )
@@ -38,6 +40,7 @@ class Mimex
          * Enter description here ...
          *
          * @param	string $file
+         * @param	bool $realDetect
          * @return	string
          */
         public static function mimetype( $file, $realDetect = true )
@@ -119,8 +122,8 @@ class Mimex
         public static function mimetypesExtensions()
         {
                 $mimeMap = self::_getMapFilename();
-                // Returns the system MIME type mapping of MIME types to extensions, as defined in /etc/mime.types (considering the first
-                // extension listed to be canonical).
+                // Returns the system MIME type mapping of MIME types to extensions, 
+                // as defined in /etc/mime.types (considering the first extension listed to be canonical).
                 $out = array();
                 $file = fopen( $mimeMap, 'r' );
                 while ( ($line = fgets( $file )) !== false ) {
