@@ -73,7 +73,7 @@ class Mimex
 			$mimetype = 'image/x-icon';
 		}
 		return $mimetype;
-	}
+	} // detectMimetype }}}
 
 
         /**
