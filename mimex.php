@@ -62,10 +62,10 @@ class Mimex
 	{
 		static $finfo;
 
-		if (! extension_loaded( 'fileinfo' )) {
-			throw new Exception( 'Can\'t detect mimetype, Fileinfo extension not loaded' );
-		}
 		if (! $finfo) {
+			if (! extension_loaded( 'fileinfo' )) {
+				throw new Exception( 'Can\'t detect mimetype, Fileinfo extension not loaded' );
+			}
 			$finfo = new finfo( FILEINFO_MIME_TYPE );
 		}
 		$mimetype = $finfo->file( $file );
@@ -122,27 +122,27 @@ class Mimex
         public static function mimetypesExtensions()
         {
                 $mimeMap = self::_getMapFilename();
+                $file = fopen( $mimeMap, 'r' );
                 // Returns the system MIME type mapping of MIME types to extensions, 
                 // as defined in /etc/mime.types (considering the first extension listed to be canonical).
                 $out = array();
-                $file = fopen( $mimeMap, 'r' );
-                while ( ($line = fgets( $file )) !== false ) {
-                        $line = trim( preg_replace( '@#.*@', '', $line ) );
-                        if (! $line) {
-                                continue;
-                        }
-                        $parts = preg_split( '@\s+@', $line );
-                        if (count( $parts ) == 1) {
-                                continue;
-                        }
-                        $type = array_shift( $parts );
-                        if (! isset( $out[$type] )) {
-                                $out[$type] = array_shift( $parts );
-                        }
-                }
-                fclose( $file );
-                return $out;
-        } // sysMimetypeExtensions }}}
+		while (($line = fgets( $file )) !== false) {
+			$line = trim( preg_replace( array( '@^\s*#.*$@', '@^\s*$@' ), '', $line ) );
+			if (! $line) {
+				continue;
+			}
+			$parts = preg_split( '@\s+@', $line );
+			if (count( $parts ) <= 1) {
+				continue;
+			}
+			$type = array_shift( $parts );
+			if (! isset( $out[$type] )) {
+				$out[$type] = array_shift( $parts );
+			}
+		}
+		fclose( $file );
+		return $out;
+	} // sysMimetypeExtensions }}}
 
 
         /**
@@ -153,26 +153,26 @@ class Mimex
         public static function extensionsMimetypes()
         {
                 $mimeMap = self::_getMapFilename();
+                $file = fopen( $mimeMap, 'r' );
                 // Returns the system MIME type mapping of extensions to MIME types, as defined in /etc/mime.types.
                 $out = array();
-                $file = fopen( $mimeMap, 'r' );
-                while ( ($line = fgets( $file )) !== false ) {
-                        $line = trim( preg_replace( '@#.*@', '', $line ) );
-                        if (! $line) {
-                                continue;
-                        }
-                        $parts = preg_split( '@\s+@', $line );
-                        if (count( $parts ) == 1) {
-                                continue;
-                        }
-                        $type = array_shift( $parts );
-                        foreach ( $parts as $part ) {
-                                $out[$part] = $type;
-                        }
-                }
-                fclose( $file );
-                return $out;
-        } // sysExtensionMimetypes }}}
+		while (($line = fgets( $file )) !== false) {
+			$line = trim( preg_replace( array( '@^\s*#.*$@', '@^\s*$@' ), '', $line ) );
+			if (! $line) {
+				continue;
+			}
+			$parts = preg_split( '@\s+@', $line );
+			if (count( $parts ) <= 1) {
+				continue;
+			}
+			$type = array_shift( $parts );
+			foreach( $parts as $p ) {
+				$out[$p] = $type;
+			}
+		}
+		fclose( $file );
+		return $out;
+	} // sysExtensionMimetypes }}}
 
 
         /**
