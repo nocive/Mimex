@@ -53,7 +53,7 @@ class Mimex
 
 
 	/**
-	 * Attempts to detect file mimetype using PHP Fileinfo
+	 * Attempts to detect file mimetype using Fileinfo extension
 	 *
 	 * @param	string $file
 	 * @return	string
