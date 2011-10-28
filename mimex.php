@@ -69,9 +69,8 @@ class Mimex
 			$finfo = new finfo( FILEINFO_MIME_TYPE );
 		}
 		$mimetype = $finfo->file( $file );
-		if ($mimetype === 'image/x-ico') {
-			$mimetype = 'image/x-icon';
-		}
+		// fix erroneous mimetype for favicons returned by some versions of fileinfo
+		$mimetype = str_replace( 'image/x-ico', 'image/x-icon', $mimetype );
 		return $mimetype;
 	} // detectMimetype }}}
 
