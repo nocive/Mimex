@@ -9,6 +9,8 @@
  * @package	Mimex
  * @author	Jose' Pedro Saraiva <nocive at gmail.com>
  */
+define( 'MIMEX_MAP', realpath( dirname( __FILE__ ) ) . DIRECTORY_SEPARATOR . 'mime.types' );
+
 class Mimex
 {
         /**
@@ -17,7 +19,7 @@ class Mimex
          * @var		string
          * @access	public
          */
-	public static $mimetypesMap = 'mime.types';
+	public static $mimetypesMap = MIMEX_MAP;
 
 
         /**
@@ -29,10 +31,7 @@ class Mimex
          */
         public static function extension( $file, $realDetect = true )
 	{
-		if ($realDetect) {
-			return self::mimetypeToExtension( self::detectMimetype( $file ) );
-		}
-                return strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
+		return $realDetect ? self::mimetypeToExtension( self::detectMimetype( $file ) ) : strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
         } // extension }}}
 
 
@@ -45,10 +44,7 @@ class Mimex
          */
         public static function mimetype( $file, $realDetect = true )
 	{
-		if ($realDetect) {
-			return self::detectMimetype( $file );
-		}
-                return self::extensionToMimetype( self::extension( $file ) );
+		return $realDetect ? return self::detectMimetype( $file ) : self::extensionToMimetype( self::extension( $file ) );
 	} // mimetype }}}
 
 
@@ -78,7 +74,7 @@ class Mimex
         /**
          * Enter description here ...
          *
-         * @param	string $file
+         * @param	string $ext
          * @return	string
          */
         public static function extensionToMimetype( $ext )
@@ -106,9 +102,7 @@ class Mimex
 		}
                 $extension = isset( $exts[$type] ) ? $exts[$type] : null;
                 // prefer jpg over jpeg
-                if ($extension === 'jpeg') {
-                        $extension = 'jpg';
-                }
+                $extension = str_replace( 'jpeg', 'jpg', $extension );
                 return $extension;
         } // mimetypeToExtension }}}
 
@@ -141,7 +135,7 @@ class Mimex
 		}
 		fclose( $file );
 		return $out;
-	} // sysMimetypeExtensions }}}
+	} // mimetypesExtensions }}}
 
 
         /**
@@ -171,7 +165,7 @@ class Mimex
 		}
 		fclose( $file );
 		return $out;
-	} // sysExtensionMimetypes }}}
+	} // extensionsMimetypes }}}
 
 
         /**
@@ -195,7 +189,7 @@ class Mimex
                 }
 
                 return self::$mimetypesMap;
-        } // _getMimetypesMap }}}
+        } // _getMapFilename }}}
 }
 
 ?>
