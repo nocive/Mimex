@@ -9,7 +9,9 @@
  * @package	Mimex
  * @author	Jose' Pedro Saraiva <nocive at gmail.com>
  */
-define( 'MIMEX_MAP', realpath( dirname( __FILE__ ) ) . DIRECTORY_SEPARATOR . 'mime.types' );
+if (! defined( 'MIMEX_MAP' )) {}
+	define( 'MIMEX_MAP', realpath( dirname( __FILE__ ) ) . DIRECTORY_SEPARATOR . 'mime.types' );
+}
 
 class Mimex
 {
@@ -44,7 +46,7 @@ class Mimex
          */
         public static function mimetype( $file, $realDetect = true )
 	{
-		return $realDetect ? return self::detectMimetype( $file ) : self::extensionToMimetype( self::extension( $file ) );
+		return $realDetect ? self::detectMimetype( $file ) : self::extensionToMimetype( self::extension( $file ) );
 	} // mimetype }}}
 
 
