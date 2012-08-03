@@ -9,7 +9,7 @@
  * @package	Mimex
  * @author	Jose' Pedro Saraiva <nocive at gmail.com>
  */
-if (! defined( 'MIMEX_MAP' )) {}
+if (! defined( 'MIMEX_MAP' )) {
 	define( 'MIMEX_MAP', realpath( dirname( __FILE__ ) ) . DIRECTORY_SEPARATOR . 'mime.types' );
 }
 
