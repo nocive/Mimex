@@ -2,6 +2,7 @@
 
 /**
  * Mimex
+ *
  * Simple class for converting extension to mimetypes and vice versa.
  * It also detects file mimetypes using PHP Fileinfo extension.
  * This code was inspired by http://goo.gl/KsTLx
@@ -10,7 +11,7 @@
  * @author	Jose' Pedro Saraiva <nocive at gmail.com>
  */
 if (! defined( 'MIMEX_MAP' )) {
-	define( 'MIMEX_MAP', realpath( dirname( __FILE__ ) ) . DIRECTORY_SEPARATOR . 'mime.types' );
+	define( 'MIMEX_MAP', __DIR__ . DIRECTORY_SEPARATOR . 'mime.types' );
 }
 
 class Mimex
@@ -19,9 +20,17 @@ class Mimex
          * Enter description here ...
          *
          * @var		string
-         * @access	public
+         * @access	protected
          */
-	public static $mimetypesMap = MIMEX_MAP;
+	protected static $_mimetypesMap = MIMEX_MAP;
+
+	/**
+	 * Enter description here ...
+	 *
+	 * @var		Fileinfo
+	 * @access	protected
+	 */
+	protected static $_finfo;
 
 
         /**
@@ -58,15 +67,13 @@ class Mimex
 	 */
 	public static function detectMimetype( $file )
 	{
-		static $finfo;
-
-		if (! $finfo) {
+		if (! self::$_finfo) {
 			if (! extension_loaded( 'fileinfo' )) {
 				throw new Exception( 'Can\'t detect mimetype, Fileinfo extension not loaded' );
 			}
-			$finfo = new finfo( FILEINFO_MIME_TYPE );
+			self::$_finfo = new finfo( FILEINFO_MIME_TYPE );
 		}
-		$mimetype = $finfo->file( $file );
+		$mimetype = self::$_finfo->file( $file );
 		// fix erroneous mimetype for favicons returned by some versions of fileinfo
 		$mimetype = str_replace( 'image/x-ico', 'image/x-icon', $mimetype );
 		return $mimetype;
@@ -181,16 +188,16 @@ class Mimex
                 static $checked = false;
 
                 if (! $checked) {
-                        if (! is_file( self::$mimetypesMap )) {
-                                throw new Exception( "System mimetypes map not found '" . self::$mimetypesMap . "'" );
+                        if (! is_file( self::$_mimetypesMap )) {
+                                throw new Exception( "System mimetypes map not found '" . self::$_mimetypesMap . "'" );
                         }
-                        if (! is_readable( self::$mimetypesMap )) {
-                                throw new Exception( "System mimetypes map not readable '" . self::$mimetypesMap . "'" );
+                        if (! is_readable( self::$_mimetypesMap )) {
+                                throw new Exception( "System mimetypes map not readable '" . self::$_mimetypesMap . "'" );
                         }
                         $checked = true;
                 }
 
-                return self::$mimetypesMap;
+                return self::$_mimetypesMap;
         } // _getMapFilename }}}
 }
 
