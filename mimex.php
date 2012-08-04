@@ -42,7 +42,7 @@ class Mimex
          */
         public static function extension( $file, $realDetect = true )
 	{
-		return $realDetect ? self::mimetypeToExtension( self::detectMimetype( $file ) ) : strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
+		return $realDetect ? static::mimetypeToExtension( static::detectMimetype( $file ) ) : strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
         } // extension }}}
 
 
@@ -55,7 +55,7 @@ class Mimex
          */
         public static function mimetype( $file, $realDetect = true )
 	{
-		return $realDetect ? self::detectMimetype( $file ) : self::extensionToMimetype( self::extension( $file ) );
+		return $realDetect ? static::detectMimetype( $file ) : static::extensionToMimetype( static::extension( $file ) );
 	} // mimetype }}}
 
 
@@ -67,13 +67,13 @@ class Mimex
 	 */
 	public static function detectMimetype( $file )
 	{
-		if (! self::$_finfo) {
+		if (! static::$_finfo) {
 			if (! extension_loaded( 'fileinfo' )) {
 				throw new Exception( 'Can\'t detect mimetype, Fileinfo extension not loaded' );
 			}
-			self::$_finfo = new finfo( FILEINFO_MIME_TYPE );
+			static::$_finfo = new finfo( FILEINFO_MIME_TYPE );
 		}
-		$mimetype = self::$_finfo->file( $file );
+		$mimetype = static::$_finfo->file( $file );
 		// fix erroneous mimetype for favicons returned by some versions of fileinfo
 		$mimetype = str_replace( 'image/x-ico', 'image/x-icon', $mimetype );
 		return $mimetype;
@@ -90,7 +90,7 @@ class Mimex
         {
                 static $types;
                 if (! isset( $types )) {
-                        $types = self::extensionsMimetypes();
+                        $types = static::extensionsMimetypes();
                 }
                 $ext = strtolower( $ext );
                 return isset( $types[$ext] ) ? $types[$ext] : null;
@@ -107,7 +107,7 @@ class Mimex
         {
                 static $exts;
                 if (! isset( $exts )) {
-                        $exts = self::mimetypesExtensions();
+                        $exts = static::mimetypesExtensions();
 		}
                 $extension = isset( $exts[$type] ) ? $exts[$type] : null;
                 // prefer jpg over jpeg
@@ -123,7 +123,7 @@ class Mimex
          */
         public static function mimetypesExtensions()
         {
-                $mimeMap = self::_getMapFilename();
+                $mimeMap = static::_getMapFilename();
                 $file = fopen( $mimeMap, 'r' );
                 // Returns the system MIME type mapping of MIME types to extensions, 
                 // as defined in /etc/mime.types (considering the first extension listed to be canonical).
@@ -154,7 +154,7 @@ class Mimex
          */
         public static function extensionsMimetypes()
         {
-                $mimeMap = self::_getMapFilename();
+                $mimeMap = static::_getMapFilename();
                 $file = fopen( $mimeMap, 'r' );
                 // Returns the system MIME type mapping of extensions to MIME types, as defined in /etc/mime.types.
                 $out = array();
@@ -188,16 +188,16 @@ class Mimex
                 static $checked = false;
 
                 if (! $checked) {
-                        if (! is_file( self::$_mimetypesMap )) {
-                                throw new Exception( "System mimetypes map not found '" . self::$_mimetypesMap . "'" );
+                        if (! is_file( static::$_mimetypesMap )) {
+                                throw new Exception( "System mimetypes map not found '" . static::$_mimetypesMap . "'" );
                         }
-                        if (! is_readable( self::$_mimetypesMap )) {
-                                throw new Exception( "System mimetypes map not readable '" . self::$_mimetypesMap . "'" );
+                        if (! is_readable( static::$_mimetypesMap )) {
+                                throw new Exception( "System mimetypes map not readable '" . static::$_mimetypesMap . "'" );
                         }
                         $checked = true;
                 }
 
-                return self::$_mimetypesMap;
+                return static::$_mimetypesMap;
         } // _getMapFilename }}}
 }
 
