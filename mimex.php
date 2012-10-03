@@ -80,6 +80,7 @@ class Mimex
     public static function extensionToMimetype($ext)
     {
         static $types;
+        
         if (!isset($types)) {
             $types = static::extensionsMimetypes();
         }
@@ -96,6 +97,7 @@ class Mimex
     public static function mimetypeToExtension($type)
     {
         static $exts;
+        
         if (!isset($exts)) {
             $exts = static::mimetypesExtensions();
         }
